@@ -85,15 +85,15 @@ class CSVDiff
             body << '</tbody>'
             body << '</table>'
             body << '<br>'
-            body << "<h3>#{item_lbl)</h3>"
+            body << "<h3>#{item_lbl}</h3>"
             body << '<table>'
             body << '<thead>'
-            body << "<tr><th rowspan=2>File</th><th colspan=2 class='center'>Lines</th><th colspan=4 class='center'>Diffs</th></tr>"
-            body << "<tr><th>From</th><th>To</th><th>Adds</th><th>Deletes</th><th>Updates</th><th>Moves</th></tr>"
+            body << "<tr><th rowspan=2>File</th><th colspan=4 class='center'>Lines</th><th colspan=4 class='center'>Diffs</th></tr>"
+            body << "<tr><th>From</th><th>To</th><th>TotalST</th><th>Listings/ST(approx.)</th><th>Adds</th><th>Deletes</th><th>Updates</th><th>Moves</th></tr>"
             body << '</thead>'
             body << '<tbody>'
             @diffs.each do |file_diff|
-                label = File.basename(file_diff.left.path? ? file_diff.left.path : file_diff.right.path)
+                label = File.basename(file_diff.left.path ? file_diff.left.path : file_diff.right.path)
                 body << '<tr>'
                 if file_diff.diffs.size > 0
                     body << "<td><a href='##{label}'>#{label}</a></td>"
@@ -102,6 +102,8 @@ class CSVDiff
                 end
                 body << "<td class='right'>#{file_diff.left.line_count}</td>"
                 body << "<td class='right'>#{file_diff.right.line_count}</td>"
+                body << "<td class='right'>#{@total_st}</td>"
+                body << "<td class='right'>#{@rows_per_st}</td>"
                 body << "<td class='right'>#{file_diff.summary['Add']}</td>"
                 body << "<td class='right'>#{file_diff.summary['Delete']}</td>"
                 body << "<td class='right'>#{file_diff.summary['Update']}</td>"
@@ -114,7 +116,7 @@ class CSVDiff
 
 
         def html_diff(body, file_diff)
-            label = File.basename(file_diff.left.path? ? file_diff.left.path : file_diff.right.path)
+            label = File.basename(file_diff.left.path ? file_diff.left.path : file_diff.right.path)
             body << "<h2 id=#{label}>#{label}</h2>"
             body << '<p>'
             count = 0
