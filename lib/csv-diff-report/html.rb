@@ -80,34 +80,41 @@ class CSVDiff
             body << '<h3>Source Locations</h3>'
             body << '<table>'
             body << '<tbody>'
-            body << "<tr><th>From:</th><td>#{@left}</td></tr>"
-            body << "<tr><th>To:</th><td>#{@right}</td></tr>"
+            body << "<tr><th>From:</th><td><a href='##{@left}'>#{@left}</a></td></tr>"
+            body << "<tr><th>To:</th><td><a href='##{@right}'>#{@right}</a></td></tr>"
             body << '</tbody>'
             body << '</table>'
             body << '<br>'
-            body << "<h3>#{item_lbl}</h3>"
+            
+            body << '<h3>Source Information</h3>'
+            body << '<table>'
+            body << '<tbody>'
+            body << "<tr><th>File</th><th>Total ST</th><th>Cached ST</th><th>Rows/ST(approx.)</th></tr>"
+            body << "<tr><td>From:</td><td class='right'>#{@left_total_st}</td><td class='right'>#{@left_cached_size}</td><td class='right'>#{@left_rows_per_st}</td></tr>"
+            body << "<tr><td>To:</td><td class='right'>#{@right_total_st}</td><td class='right'>#{@right_cached_size}</td><td class='right'>#{@right_rows_per_st}</td></tr>"
+            body << '</tbody>'
+            body << '</table>'
+            body << '<br>'
+
+            body << "<h3>Diff Information</h3>"
             body << '<table>'
             body << '<thead>'
-            body << "<tr><th rowspan=2>File</th><th colspan=4 class='center'>Lines</th><th colspan=4 class='center'>Diffs</th></tr>"
-            body << "<tr><th>From</th><th>To</th><th>TotalST</th><th>Listings/ST(approx.)</th><th>Adds</th><th>Deletes</th><th>Updates</th><th>Moves</th></tr>"
+            body << "<tr><th rowspan=2>File</th><th colspan=2 class='center'>Lines</th><th colspan=5 class='center'>Diffs</th></tr>"
+            body << "<tr><th>From</th><th>To</th><th>Adds</th><th>Deletes</th><th>Updates</th><th>Moves</th><th>Unaffected</th></tr>"
             body << '</thead>'
             body << '<tbody>'
             @diffs.each do |file_diff|
-                label = File.basename(file_diff.left.path ? file_diff.left.path : file_diff.right.path)
                 body << '<tr>'
-                if file_diff.diffs.size > 0
-                    body << "<td><a href='##{label}'>#{label}</a></td>"
-                else
-                    body << "<td>#{label}</td>"
-                end
+                
+                body << "<td>Diff</td>"
+                
                 body << "<td class='right'>#{file_diff.left.line_count}</td>"
                 body << "<td class='right'>#{file_diff.right.line_count}</td>"
-                body << "<td class='right'>#{@total_st}</td>"
-                body << "<td class='right'>#{@rows_per_st}</td>"
                 body << "<td class='right'>#{file_diff.summary['Add']}</td>"
                 body << "<td class='right'>#{file_diff.summary['Delete']}</td>"
                 body << "<td class='right'>#{file_diff.summary['Update']}</td>"
                 body << "<td class='right'>#{file_diff.summary['Move']}</td>"
+                body << "<td class='right'>#{file_diff.summary['Unaffected']}</td>"
                 body << '</tr>'
             end
             body << '</tbody>'
@@ -116,8 +123,7 @@ class CSVDiff
 
 
         def html_diff(body, file_diff)
-            label = File.basename(file_diff.left.path ? file_diff.left.path : file_diff.right.path)
-            body << "<h2 id=#{label}>#{label}</h2>"
+            body << "<h2>Difference</h2>"
             body << '<p>'
             count = 0
             if file_diff.summary['Add'] > 0
