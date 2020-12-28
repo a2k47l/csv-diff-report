@@ -154,7 +154,13 @@ class CSVDiff
             end
             body << '</tr></thead>'
             body << '<tbody>'
-            file_diff.diffs.sort_by{|k, v| v[:row] }.each do |key, diff|
+            
+            lookup = {}
+            action_ordered_array = ['add' , 'update' , 'delete', 'unaffected']
+            action_ordered_array.each_with_index do |item, index|
+                lookup[item] = index
+            end
+            file_diff.diffs.sort_by{|k, v| lookup.fetch(v[:action].downcase) }.each do |key, diff|
                 body << '<tr>'
                 chg = diff[:action]
                 out_fields.each_with_index do |field, i|
