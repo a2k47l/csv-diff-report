@@ -80,8 +80,8 @@ class CSVDiff
             body << '<h3>Source Locations</h3>'
             body << '<table>'
             body << '<tbody>'
-            body << "<tr><th>From:</th><td><a href='##{@left}'>#{@left}</a></td></tr>"
-            body << "<tr><th>To:</th><td><a href='##{@right}'>#{@right}</a></td></tr>"
+            body << "<tr><th>From:</th><td><a href='#{@left}'>#{@left}</a></td></tr>"
+            body << "<tr><th>To:</th><td><a href='#{@right}'>#{@right}</a></td></tr>"
             body << '</tbody>'
             body << '</table>'
             body << '<br>'
